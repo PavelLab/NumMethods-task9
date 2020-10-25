@@ -3,6 +3,16 @@
 //
 // User defined functions
 //
+double utils::max_error(double max_error, double error) {
+	if (abs(error) > max_error)
+		return abs(error);
+	return max_error;
+};
+
+
+double utils::error_estimate(double half_step, double v_next, double p) {
+	return ((half_step - v_next) / (pow(2, p) - 1)) * pow(2, p);
+};
 
 //истинное решение
 double utils::function_1(double x, double y, parameter a/* =0 */)
@@ -34,10 +44,16 @@ double utils::runge_kutta_4(std::function<double(double, double, parameter)> fun
 
 std::vector<double> utils::next_point(num_method method, num_function func, double x, double v, double step, parameter param)
 {
+	double half_step_1;
+	double half_step_2;
+	double S;
 	double v_next = method(func, step, x, v, param);
 	double x_next = x + step;
-
-	std::vector<double> point = { x_next, v_next, step };
+	double current_step = step;
+	half_step_1 = method(func, step / 2., x, v, param); // получаем v_{n+1/2} из точки (x_{n}, v_{n}) с шагом h/2
+	half_step_2 = method(func, step / 2., x + step / 2., half_step_1, param);
+	S = ((half_step_2 - v_next) / (pow(2, 4) - 1)) * pow(2, 4);
+	std::vector<double> point = { x_next, v_next, step, current_step, half_step_2 };
 
 	return point;
 }
@@ -51,7 +67,7 @@ std::vector<double> utils::next_point_with_step_conrol(num_method method, num_fu
 	double error;
 	double x_next;
 	double v_next = 0;
-	double double_step;
+	double current_step;
 
 
 	while (true)
@@ -68,6 +84,7 @@ std::vector<double> utils::next_point_with_step_conrol(num_method method, num_fu
 		{
 			x_next = x + step;
 			v_next = whole_step;
+			current_step = step;
 			step *= 2.;
 			break;
 		}
@@ -75,13 +92,13 @@ std::vector<double> utils::next_point_with_step_conrol(num_method method, num_fu
 		{
 			x_next = x + step;
 			v_next = whole_step;
+			current_step = step;
 			break;
 		}
 	}
+	//current_step - шаг для вычисления текущей точки {x_next, v_next}
 
-	//y = whole_step;
-
-	std::vector<double> point = { x_next, v_next, step };
+	std::vector<double> point = { x_next, v_next, step, current_step, half_step_2 };
 
 	return point;
 

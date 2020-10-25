@@ -18,7 +18,9 @@ namespace utils
 	//
 	// User defined functions
 	//
-
+	double max_error(double max_error, double error);
+	double error_estimate(double half_step, double v_next, double p);
+	
 	double function_1(double x, double y, parameter a);
 	double function_1_derivative(double x, double y, parameter a);
 
