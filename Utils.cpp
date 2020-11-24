@@ -46,13 +46,11 @@ std::vector<double> utils::next_point(num_method method, num_function func, doub
 {
 	double half_step_1;
 	double half_step_2;
-	double S;
 	double v_next = method(func, step, x, v, param);
 	double x_next = x + step;
 	double current_step = step;
 	half_step_1 = method(func, step / 2., x, v, param); // получаем v_{n+1/2} из точки (x_{n}, v_{n}) с шагом h/2
 	half_step_2 = method(func, step / 2., x + step / 2., half_step_1, param);
-	S = ((half_step_2 - v_next) / (pow(2, 4) - 1)) * pow(2, 4);
 	std::vector<double> point = { x_next, v_next, step, current_step, half_step_2 };
 
 	return point;
