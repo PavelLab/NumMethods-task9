@@ -9,7 +9,7 @@ struct parameter {
 		m = _m;
 	}
 	void calculate_const(double y0) {
-		c = a1 / pow(y0,2) + a3;
+		if (y0 != 0)c = a1 / pow(y0, 2) + a3;
 	}
 
 };

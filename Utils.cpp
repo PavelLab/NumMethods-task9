@@ -17,7 +17,9 @@ double utils::error_estimate(double half_step, double v_next, double p) {
 //истинное решение
 double utils::function_1(double x, double y, parameter a/* =0 */)
 {
-	return sqrt(a.a1/(a.c*exp(2*a.a1*x/a.m)-a.a3));
+	if (y > 0) return sqrt(a.a1 / (a.c * exp(2 * a.a1 * x / a.m) - a.a3));
+	else if (y < 0) return -sqrt(a.a1 / (a.c * exp(2 * a.a1 * x / a.m) - a.a3));
+	else return 0;
 }
 
 //численное решение
